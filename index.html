@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Password Strength</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="input-box">
+            <input type="password"  id="password" placeholder="Enter Password">
+            <p id="strength"> 10% </p>
+        </div>
+    </div>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const strengthDisplay = document.getElementById('strength');
+
+        passwordInput.addEventListener("input", () => {
+            const password = passwordInput.value;
+            const strength = calculatePasswordStrength(password);
+
+            if (strength >= 70) {
+                passwordInput.style.border = "1px solid green";
+            } else if (strength >= 50 && strength < 70) {
+                passwordInput.style.border = "1px solid orange";
+            } else if (strength < 50) {
+                passwordInput.style.border = "1px solid red";
+            }
+
+            strengthDisplay.textContent = `${strength}%`;
+        });
+
+        function calculatePasswordStrength(password) {
+            const patterns = {
+                lowercase: /[a-z]/,
+                uppercase: /[A-Z]/,
+                numbers: /\d/,
+                specialChars: /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/
+            };
+
+            const meetsCondition = condition => condition.test(password);
+
+            const lengthValid = password.length >= 8;
+            const lowercaseValid = meetsCondition(patterns.lowercase);
+            const uppercaseValid = meetsCondition(patterns.uppercase);
+            const numbersValid = meetsCondition(patterns.numbers);
+            const specialCharsValid = meetsCondition(patterns.specialChars);
+
+            const strength = (lengthValid + lowercaseValid + uppercaseValid + numbersValid + specialCharsValid) / 5 * 100;
+
+            return strength;
+        }
+    </script>
+</body>
+</html>
